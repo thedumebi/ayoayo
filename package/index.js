@@ -3,6 +3,16 @@ const events = require('events')
 const minimax = require('./minimax')
 
 class Ayoayo extends events.EventEmitter {
+  //  // game events
+   static events = {
+    GAME_OVER: 'game_over',
+    DROP_SEED: 'drop_seed',
+    SWITCH_TURN: 'switch_turn',
+    MOVE_TO: 'move_to',
+    PICKUP_SEEDS: 'pickup_seeds',
+    CAPTURE: 'capture'
+  }
+
   constructor () {
     super()
     /*
@@ -28,15 +38,6 @@ class Ayoayo extends events.EventEmitter {
     this.TOTAL_NUM_SEEDS = 48
     // number of cells in a row
     this.NUM_CELLS_PER_ROW = 6
-    // game events
-    this.events = {
-      GAME_OVER: 'game_over',
-      DROP_SEED: 'drop_seed',
-      SWITCH_TURN: 'switch_turn',
-      MOVE_TO: 'move_to',
-      PICKUP_SEEDS: 'pickup_seeds',
-      CAPTURE: 'capture'
-    }
   }
 
   /**
@@ -50,7 +51,7 @@ class Ayoayo extends events.EventEmitter {
 
     // relay-sow. update board and increment captures
     let captured
-    [this.board, captured] = this.relaySow(
+    [this.board, captured] = this.#relaySow(
       this.board,
       this.nextPlayer,
       cell,
@@ -60,11 +61,11 @@ class Ayoayo extends events.EventEmitter {
     this.captured[1] += captured[1]
 
     // Toggle to next player
-    this.nextPlayer = this.togglePlayer(this.nextPlayer)
-    this.emit(this.events.SWITCH_TURN, this.nextPlayer)
+    this.nextPlayer = Ayoayo.togglePlayer(this.nextPlayer)
+    this.emit(Ayoayo.events.SWITCH_TURN, this.nextPlayer)
 
     // get the next player permissible moves
-    this.permissibleMoves = this.getPermissibleMoves(this.board, this.nextPlayer)
+    this.permissibleMoves = this.#getPermissibleMoves(this.board, this.nextPlayer)
 
     /**
      * no point in proceeding if next player has no more moves
@@ -78,7 +79,7 @@ class Ayoayo extends events.EventEmitter {
       let numberOfRemainingSeeds = 0
       this.board[this.nextPlayer] = this.board[this.nextPlayer].map((cell, index) => {
         numberOfRemainingSeeds += cell
-        this.emit(this.events.CAPTURE, this.nextPlayer, index, this.nextPlayer)
+        this.emit(Ayoayo.events.CAPTURE, this.nextPlayer, index, this.nextPlayer)
         return 0
       })
       this.captured[this.nextPlayer] += numberOfRemainingSeeds
@@ -87,8 +88,8 @@ class Ayoayo extends events.EventEmitter {
     if (shouldEndGame) {
       this.permissibleMoves = []
       this.isGameOver = true
-      this.winner = this.getWinner(this.captured)
-      this.emit(this.events.GAME_OVER, this.winner)
+      this.winner = this.#getWinner(this.captured)
+      this.emit(Ayoayo.events.GAME_OVER, this.winner)
     }
   }
 
@@ -102,18 +103,18 @@ class Ayoayo extends events.EventEmitter {
    * @param {*} cell current cell picking from
    * @param {*} emit  emit events while sowing
    */
-  relaySow (board, player, cell, emit = () => {}) {
+  #relaySow (board, player, cell, emit = () => {}) {
     const captured = [0, 0]
 
     // pick up seeds
     let numberOfSeedsInHand = board[player][cell]
-    emit(this.events.PICKUP_SEEDS, player, cell)
+    emit(Ayoayo.events.PICKUP_SEEDS, player, cell)
     board[player][cell] = 0
 
     // move to next cell position
 
-    let nextPosition = this.next(player, cell)
-    emit(this.events.MOVE_TO, [player, cell], nextPosition)
+    let nextPosition = this.#next(player, cell)
+    emit(Ayoayo.events.MOVE_TO, [player, cell], nextPosition)
     let [nextPositionRow, nextPositionCell] = nextPosition
 
     /*
@@ -124,7 +125,7 @@ class Ayoayo extends events.EventEmitter {
     // drop one seed in next cell
       board[nextPositionRow][nextPositionCell]++
       numberOfSeedsInHand--
-      emit(this.events.DROP_SEED, nextPositionRow, nextPositionCell)
+      emit(Ayoayo.events.DROP_SEED, nextPositionRow, nextPositionCell)
 
       /**
        * If the cell has four seeds then capture. If this is the last seed in hand,
@@ -135,7 +136,7 @@ class Ayoayo extends events.EventEmitter {
         captured[capturer] += 4
         // make the seeds in the captured cell zero
         board[nextPositionRow][nextPositionCell] = 0
-        emit(this.events.CAPTURE, nextPositionRow, nextPositionCell, capturer)
+        emit(Ayoayo.events.CAPTURE, nextPositionRow, nextPositionCell, capturer)
       }
 
       /**
@@ -148,12 +149,12 @@ class Ayoayo extends events.EventEmitter {
         numberOfSeedsInHand = board[nextPositionRow][nextPositionCell]
         // set the seeds in the cell to zero
         board[nextPositionRow][nextPositionCell] = 0
-        emit(this.events.PICKUP_SEEDS, nextPositionRow, nextPositionCell)
+        emit(Ayoayo.events.PICKUP_SEEDS, nextPositionRow, nextPositionCell)
       }
 
       // move to next position
-      nextPosition = this.next(nextPositionRow, nextPositionCell)
-      emit(this.events.MOVE_TO, [nextPositionRow, nextPositionCell], nextPosition);
+      nextPosition = this.#next(nextPositionRow, nextPositionCell)
+      emit(Ayoayo.events.MOVE_TO, [nextPositionRow, nextPositionCell], nextPosition);
       [nextPositionRow, nextPositionCell] = nextPosition
     }
 
@@ -166,7 +167,7 @@ class Ayoayo extends events.EventEmitter {
    * @param {number} player current player
    * @returns {number} other player
    */
-  togglePlayer (player) {
+  static togglePlayer (player) {
     return (player + 1) % 2
   }
 
@@ -179,8 +180,8 @@ class Ayoayo extends events.EventEmitter {
    * @param {number} player current player
    * @returns {number[]}
    */
-  getPermissibleMoves (board, player) {
-    const otherPlayer = this.togglePlayer(player)
+  #getPermissibleMoves (board, player) {
+    const otherPlayer = Ayoayo.togglePlayer(player)
     // get the non empty cells the player has
     const nonEmptyCellIndexes = board[player].map((_, index) => index).filter(seeds => board[player][seeds] > 0)
 
@@ -195,7 +196,7 @@ class Ayoayo extends events.EventEmitter {
       // clone board
       const boardCopy = board.map(row => row.slice())
       // simulate the play
-      const [boardIfCellPlayed] = this.relaySow(boardCopy, player, cellIndex)
+      const [boardIfCellPlayed] = this.#relaySow(boardCopy, player, cellIndex)
       // return if the play would lead to non empty cells
       return boardIfCellPlayed[otherPlayer].some(cell => cell > 0)
     })
@@ -206,7 +207,7 @@ class Ayoayo extends events.EventEmitter {
    * @param {Number[]} captured
    * @returns
    */
-  getWinner (captured) {
+  #getWinner (captured) {
     if (captured[0] === captured[1]) return -1
     if (captured[0] > captured[1]) return 0
     return 1
@@ -218,7 +219,7 @@ class Ayoayo extends events.EventEmitter {
    * @param {number} cell cell number on board
    * @returns {number[]}
    */
-  next (row, cell) {
+  #next (row, cell) {
     if (row === 0) return cell === 0 ? [1, 0] : [0, cell - 1]
     return cell === this.NUM_CELLS_PER_ROW - 1
       ? [0, this.NUM_CELLS_PER_ROW - 1]
@@ -239,7 +240,7 @@ class Ayoayo extends events.EventEmitter {
     return clone
   }
 
-  vsMinimax (depth = 5) {
+  static vsMinimax (depth = 5) {
     const game = new Ayoayo()
     const oldPlayFunc = game.play.bind(game)
     game.play = function minimaxPlay (...args) {
