@@ -4,7 +4,8 @@
   "description": "Ayo Ayo game clone from Chidi Williams to understand game theory",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:cli": "node -r module-alias/register cli/index.js"
   },
   "devDependencies": {
     "eslint": "^7.27.0",
@@ -15,12 +16,11 @@
   },
   "_moduleAliases": {
     "@": "./",
-    "@lib": "./lib",
-    "@config": "./config.js",
-    "@resources": "./resources",
-    "@models": "./src/db/models/index.js",
-    "@routes": "./src/routes"
+    "@Ayoayo": "./package/index.js"
   },
   "author": "Chiwuzoh Daniel (https://chiwuzoh.com.ng/)",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "module-alias": "^2.2.2"
+  }
 }

@@ -3,13 +3,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@lib/*": ["./lib/*"],
-      "@config": ["./config.js"],
-      "@resources": ["./resources/*"],
-      "@models/*": ["./src/db/models/*"],
-      "@routes/*": ["./src/routes/*"],
-
-      "@tests/*": ["./__tests__/*"]
+      "@Ayoayo": ["./package/index.js"]
     }
   }
 }
