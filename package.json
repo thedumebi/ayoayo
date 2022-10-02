@@ -1,0 +1,26 @@
+{
+  "name": "dmb-ayo",
+  "version": "1.0.0",
+  "description": "Ayo Ayo game clone from Chidi Williams to understand game theory",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "eslint": "^7.27.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.23.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0"
+  },
+  "_moduleAliases": {
+    "@": "./",
+    "@lib": "./lib",
+    "@config": "./config.js",
+    "@resources": "./resources",
+    "@models": "./src/db/models/index.js",
+    "@routes": "./src/routes"
+  },
+  "author": "Chiwuzoh Daniel (https://chiwuzoh.com.ng/)",
+  "license": "ISC"
+}
