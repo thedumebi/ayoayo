@@ -2,7 +2,6 @@
   "name": "dmb-ayo",
   "version": "1.0.0",
   "description": "Ayo Ayo game clone from Chidi Williams to understand game theory",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon -r module-alias/register -r dotenv/config index.js",

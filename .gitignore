@@ -2,3 +2,4 @@ node_modules
 app.js
 .parcel-cache
 .DS_Store
+dist
