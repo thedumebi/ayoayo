@@ -1,29 +1,30 @@
-const Ayoayo = require('../package')
-// const Ayoayo = require('@chidiwilliams/ayoayo')
-console.log(Ayoayo)
+const Ayoayo = require('@Ayoayo')
 
 /**
  * @typedef {import ("../package")} Ayoayo
  *
  */
 
-// (function () {
 /**
  * @type {Ayoayo}
  */
 let game
 let currentEvent
 let eventQueue = []
-const newPvPGameButton = document.querySelector('.controls button.pvp')
-const newAiGameButton = document.querySelector('.controls button.ai')
+const pits = document.querySelectorAll('.pit')
+const board = document.querySelector('.board')
 const players = document.querySelectorAll('.player')
-const noGamePadding = document.querySelector('.no-game-padding')
-const turnBadges = document.querySelectorAll('.turn-badge')
+const helpModalBg = document.querySelector('.modal-bg')
+const helpModal = document.querySelector('.help-modal')
 const sowingHand = document.querySelector('.hand.sowing')
+const turnBadges = document.querySelectorAll('.turn-badge')
 const capturingHand = document.querySelector('.hand.capturing')
 const winnerBadges = document.querySelectorAll('.winner-badge')
-const pits = document.querySelector('.pit')
-const board = document.querySelector('.board')
+const noGamePadding = document.querySelector('.no-game-padding')
+const closeHelpModal = document.querySelector('.help-modal-close')
+const helpButton = document.querySelector('.controls button.help')
+const newAiGameButton = document.querySelector('.controls button.ai')
+const newPvPGameButton = document.querySelector('.controls button.pvp')
 
 function getPitAtPosition (row, column) {
   return document.querySelector(`.side-${row + 1} .pit-${column + 1}`)
@@ -41,8 +42,7 @@ function getPitSummary (pit) {
 }
 
 function setSummaryTextContent (elem, count) {
-  // elem.textContent = count === 0 ? '' : String(count)
-  elem.textContent = String(count)
+  elem.textContent = count === 0 ? '' : String(count)
 }
 
 function captureStoreByPlayer (player) {
@@ -84,7 +84,7 @@ function updateTurnBadges (nextPlayer) {
   // get the other player
   const otherPlayer = Ayoayo.togglePlayer(nextPlayer)
   // show player turn text
-  turnBadges.item(nextPlayer).style.diplay = 'inline-block'
+  turnBadges.item(nextPlayer).style.display = 'inline-block'
   // hode other player turn text
   turnBadges.item(otherPlayer).style.display = 'none'
 }
@@ -101,7 +101,7 @@ function handlePickupSeedsEvent (event, fractionDone) {
     // get pit
     const pit = getPitAtPosition(row, column)
     // get all seeds in a pit
-    const seeds = pit.querySelectorAll('.seeds')
+    const seeds = pit.querySelectorAll('.seed')
 
     // remove seeds from pit and put in sowing hand
     seeds.forEach(seed => {
@@ -169,7 +169,7 @@ function handleCaptureEvent (event, fractionDone) {
   // get pit position
   const pit = getPitAtPosition(row, column)
   // get seeds inside pit
-  const seedsInPit = pit.querySelectorAll('.seeds')
+  const seedsInPit = pit.querySelectorAll('.seed')
   seedsInPit.forEach(seed => {
     // remove seed from pit
     pit.removeChild(seed)
@@ -204,14 +204,14 @@ function handleGameOverEvent (event, fractionDone) {
     if (winner === -1) {
       winnerBadges.forEach(badge => {
         badge.textContent = 'Draw!'
-        badge.style.diplay = 'inline-block'
+        badge.style.display = 'inline-block'
       })
       return
     }
 
     const badge = winnerBadges.item(winner)
     badge.textContent = 'Winner!'
-    badge.style.diplay = 'inline-block'
+    badge.style.display = 'inline-block'
   }
 }
 
@@ -235,7 +235,7 @@ function styleSeed (seed) {
   const r = Math.round(Math.random() * 360)
   const x = Math.round(Math.random() * range) + offset
   const y = Math.round(Math.random() * range) + offset
-  seed.style.transform = `rotate(${r}deg) translate(${x}px, ${y}px))`
+  seed.style.transform = `rotate(${r}deg) translate(${x}px, ${y}px)`
 }
 
 function initSeedStore (store, count) {
@@ -363,8 +363,26 @@ function onClickNewAiGame () {
   game = Ayoayo.vsMinimax()
   onNewGame('AI')
 }
-newPvPGameButton.addEventListener('click', onClickNewPvPGame)
 newAiGameButton.addEventListener('click', onClickNewAiGame)
+newPvPGameButton.addEventListener('click', onClickNewPvPGame)
+helpButton.addEventListener('click', () => {
+  helpModalBg.style.display = 'block'
+  helpModalBg.style.opacity = 1
+  helpModal.style.display = 'flex'
+  helpModal.style.opacity = 1
+})
+closeHelpModal.addEventListener('click', () => {
+  helpModalBg.style.display = 'none'
+  helpModalBg.style.opacity = 0
+  helpModal.style.display = 'none'
+  helpModal.style.opacity = 0
+})
+helpModalBg.addEventListener('click', () => {
+  helpModal.style.opacity = 0
+  helpModal.style.display = 'none'
+  helpModalBg.style.opacity = 0
+  helpModalBg.style.display = 'none'
+})
 
 function onClickPit (evt) {
   // only fire if pit isn't disabled
@@ -381,10 +399,7 @@ document.querySelectorAll('.side .pit').forEach(pit => {
 })
 
 function init () {
-  console.log('init called')
-  console.log(game)
-  console.log(Ayoayo)
-  const seeds = document.querySelectorAll('.seeds')
+  const seeds = document.querySelectorAll('.seed')
   seeds.forEach(seed => {
     styleSeed(seed)
   })
@@ -429,4 +444,3 @@ function handleEventQueue (time) {
   window.requestAnimationFrame(handleEventQueue)
 }
 window.requestAnimationFrame(handleEventQueue)
-// })()

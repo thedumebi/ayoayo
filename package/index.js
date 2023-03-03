@@ -3,8 +3,8 @@ const events = require('events')
 const minimax = require('./minimax')
 
 class Ayoayo extends events.EventEmitter {
-  //  // game events
-   static events = {
+  // game events
+  static events = {
     GAME_OVER: 'game_over',
     DROP_SEED: 'drop_seed',
     SWITCH_TURN: 'switch_turn',
@@ -73,7 +73,7 @@ class Ayoayo extends events.EventEmitter {
      */
     const shouldEndGame = this.permissibleMoves.length === 0 || this.captured.some(count => count > this.TOTAL_NUM_SEEDS / 2)
 
-    // capture the remaining seeds if the opponent is out of seeds
+    // capture the remaining seeds if the opponent is out of moves
     const shouldCaptureRemainingSeeds = this.permissibleMoves.length === 0
     if (shouldCaptureRemainingSeeds) {
       let numberOfRemainingSeeds = 0
@@ -112,15 +112,14 @@ class Ayoayo extends events.EventEmitter {
     board[player][cell] = 0
 
     // move to next cell position
-
     let nextPosition = this.#next(player, cell)
     emit(Ayoayo.events.MOVE_TO, [player, cell], nextPosition)
     let [nextPositionRow, nextPositionCell] = nextPosition
 
     /*
-    * continue to move. Terminate when all seeds have been dropped
-    * and can't pickup again.
-    */
+      * continue to move. Terminate when all seeds have been dropped
+      * and can't pickup again.
+      */
     while (numberOfSeedsInHand > 0) {
     // drop one seed in next cell
       board[nextPositionRow][nextPositionCell]++
@@ -232,7 +231,7 @@ class Ayoayo extends events.EventEmitter {
   clone () {
     const clone = new Ayoayo()
     clone.winner = this.winner
-    clone.captured = this.captured
+    clone.captured = this.captured.slice()
     clone.board = this.board.map(row => row.slice())
     clone.permissibleMoves = this.permissibleMoves.slice()
     clone.nextPlayer = this.nextPlayer
