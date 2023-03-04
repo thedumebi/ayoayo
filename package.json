@@ -4,11 +4,10 @@
   "description": "Ayo Ayo game clone from Chidi Williams to understand game theory",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon -r module-alias/register -r dotenv/config index.js",
-    "start": "node -r module-alias/register -r dotenv/config index.js",
     "start:cli": "node -r module-alias/register -r dotenv/config cli/index.js",
-    "start:web": "parcel web/index.html",
-    "build": "parcel build web/index.html --public-url ."
+    "start": "parcel web/index.html",
+    "build": "parcel build web/index.html --public-url .",
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "devDependencies": {
     "eslint": "^8.35.0",
@@ -17,6 +16,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
     "events": "^3.3.0",
+    "gh-pages": "^5.0.0",
     "nodemon": "^2.0.21",
     "parcel": "^2.8.3",
     "parcel-plugin-ogimage": "^1.2.0"
@@ -32,11 +32,6 @@
   "author": "Chiwuzoh Daniel (https://chiwuzoh.com.ng/)",
   "license": "ISC",
   "dependencies": {
-    "apicache": "^1.6.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "express-rate-limit": "^6.7.0",
     "module-alias": "^2.2.2"
   }
 }
