@@ -9,7 +9,7 @@
  *
  * @param {Ayoayo} game Ayoayo game
  * @param {Number} depth minimax depth
- * @param {Number} moves
+ * @param {Number} moves permissible moves
  * @param {Boolean} maximizing maximiazing flag
  * @returns {Number[]}
  */

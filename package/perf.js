@@ -50,23 +50,23 @@ function testAll () {
   // console.log(`Played ${n} game(s)\nMinimax: ${scores[1]}\nRandom: ${scores[2]}\nDraw: ${scores[0]}`)
 
   // random vs minimax
-  // const n = 100
-  // const scores = [0, 0, 0]
-  // for (let i = 0; i < n; i++) {
-  //   const winner = playGame(randomPlayer, minimaxPlayer)
-  //   scores[winner + 1]++
-  // }
-  // console.log(`Played ${n} game(s)\nMinimax: ${scores[2]}\nRandom: ${scores[1]}\nDraw: ${scores[0]}`)
-
-  // random vs random
-  const n = 1
+  const n = 100
   const scores = [0, 0, 0]
   for (let i = 0; i < n; i++) {
-    const winner = playGame(randomPlayer, randomPlayer)
-    console.log(winner)
+    const winner = playGame(randomPlayer, minimaxPlayer)
     scores[winner + 1]++
   }
-  console.log(`Played ${n} game(s)\nRandom 1: ${scores[1]}\nRandom 2: ${scores[2]}\nDraw: ${scores[0]}`)
+  console.log(`Played ${n} game(s)\nMinimax: ${scores[2]}\nRandom: ${scores[1]}\nDraw: ${scores[0]}`)
+
+  // random vs random
+  // const n = 1
+  // const scores = [0, 0, 0]
+  // for (let i = 0; i < n; i++) {
+  //   const winner = playGame(randomPlayer, randomPlayer)
+  //   console.log({ winner })
+  //   scores[winner + 1]++
+  // }
+  // console.log(`Played ${n} game(s)\nRandom 1: ${scores[1]}\nRandom 2: ${scores[2]}\nDraw: ${scores[0]}`)
 }
 
 testAll()

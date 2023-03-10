@@ -4,7 +4,7 @@
   "description": "Ayo Ayo game clone from Chidi Williams to understand game theory",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:cli": "node -r module-alias/register -r dotenv/config cli/index.js",
+    "start:cli": "node -r module-alias/register cli/index.js",
     "start": "parcel web/index.html",
     "build": "parcel build web/index.html --public-url .",
     "deploy": "npm run build && gh-pages -d dist"
